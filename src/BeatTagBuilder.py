@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter as tk
 from tkinter import messagebox
 
@@ -135,7 +136,12 @@ root = tk.Tk()
 root.title("Beat Tag Builder")
 
 # Set the application icon
-icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
+if getattr(sys, 'frozen', False):  # Check if running as a PyInstaller bundle
+    base_path = sys._MEIPASS  # Path to the temporary folder created by PyInstaller
+else:
+    base_path = os.path.dirname(__file__)  # Path to the script directory
+
+icon_path = os.path.join(base_path, "icon.ico")
 root.iconbitmap(icon_path)
 
 # Prevent the user from resizing the window
