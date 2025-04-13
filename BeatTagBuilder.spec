@@ -5,7 +5,7 @@ a = Analysis(
     ['src\\BeatTagBuilder.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('src/icon.ico', 'src')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -32,6 +32,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['src\\icon.ico'],
 )
 coll = COLLECT(
     exe,

@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import messagebox
 
@@ -132,6 +133,10 @@ def clean_duplicates():
 # Create the main application window
 root = tk.Tk()
 root.title("Beat Tag Builder")
+
+# Set the application icon
+icon_path = os.path.join(os.path.dirname(__file__), "src", "icon.ico")
+root.iconbitmap(icon_path)
 
 # Prevent the user from resizing the window
 root.resizable(False, False)
