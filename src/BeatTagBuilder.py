@@ -135,7 +135,7 @@ root = tk.Tk()
 root.title("Beat Tag Builder")
 
 # Set the application icon
-icon_path = os.path.join(os.path.dirname(__file__), "src", "icon.ico")
+icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
 root.iconbitmap(icon_path)
 
 # Prevent the user from resizing the window
@@ -147,13 +147,13 @@ container.pack(fill=tk.BOTH, expand=True)
 
 # Define some preset tags for the FIRST row | Mood & Instrumentation
 preset_tags_row1 = {
-    "Piano": "#piano type beats",
-    "Guitar": "#guitar type beats",
-    "Chill": "#chill type beats",
-    "Sad": "#sad type beats",
-    "Happy": "#happy type beats",
-    "Romantic": "#romantic type beats",
-    "Angry": "#angry type beats"
+    "Piano": "#piano type beats #piano rap beats #free piano type beats",
+    "Guitar": "#guitar type beats #guitar rap beats #free guitar type beats",
+    "Chill": "#chill type beats #chill rap beats #free chill type beats",
+    "Sad": "#sad type beats #sad rap beats #free sad type beats",
+    "Happy": "#happy type beats #happy rap beats #free happy type beats",
+    "Romantic": "#romantic type beats #romantic rap beats #free romantic type beats",
+    "Angry": "#angry type beats #angry rap beats #free angry type beats"
 }
 
 # Define some preset tags for the SECOND row | Genre & Style Descriptors
