@@ -33,21 +33,9 @@ Beat Tag Builder is a Python-based GUI application designed to help Hip Hop Prod
 
 ## Installation
 
-### This process will be streamlined with an installer shortly.
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/BeatTagBuilder.git
-   cd BeatTagBuilder
-   ```
-
-2. Run the program:
-   - Ensure you have Python installed on your system. You can download it from [python.org](https://www.python.org/).
-
-   - Run the following command to start the application:
-     ```bash
-     python src/BeatTagBuilder.py
-     ```
+1. Download the latest `BeatTagBuilder.rar` release.
+2. Extract to a local folder.
+3. Run the `BeatTagBuilder.exe` application directly — no installation required! Since this "installation" is portable, you can right-click the .exe and create a desktop shortcut or pin it to your taskbar.
 
 ## Customizing the Description Text
 
