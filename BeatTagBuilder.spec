@@ -5,7 +5,7 @@ a = Analysis(
     ['src\\BeatTagBuilder.py'],
     pathex=[],
     binaries=[],
-    datas=[('src/icon.ico', '.')],
+    datas=[('src/icon.ico', '.'), ('src/description.txt', '.'), ('README.md', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

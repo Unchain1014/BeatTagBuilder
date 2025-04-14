@@ -307,7 +307,12 @@ def copy_to_clipboard():
 
 def copy_description():
     try:
-        # Construct the file path
+        # Dynamically locate the description.txt file
+        if getattr(sys, 'frozen', False):  # Check if running as a PyInstaller bundle
+            base_path = sys._MEIPASS  # Path to the temporary folder created by PyInstaller
+        else:
+            base_path = os.path.dirname(__file__)  # Path to the script directory
+
         description_file_path = os.path.join(base_path, "description.txt")
         
         # Read the contents of the file
