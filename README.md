@@ -10,7 +10,7 @@ Beat Tag Builder is a Python-based GUI application designed to help Hip Hop Prod
   - Artist Type Beat Tags
 
 - **Tag Processing**:
-  - **SoundCloud**: Wraps tags in quotation marks and separates them with commas. Supports `#` and commas to trigger new tags.
+  - **SoundCloud**: Wraps tags in quotation marks and separates them with commas.
   - **YouTube**: Removes `#` and quotation marks from tags and separates them with commas.
 
 - **Tag Cleaning**:
