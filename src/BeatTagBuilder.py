@@ -12,6 +12,9 @@ def add_tags(tags, button):
     result_box.insert(tk.END, current_text + tags)
     button.config(state=tk.DISABLED)  # Disable the button after it's pressed
 
+    # Immediately clean duplicates silently after adding tags
+    clean_duplicates(silent=True)
+
 # Add a reset function
 def reset_tags():
     if messagebox.askyesno("Reset", "Are you sure you want to reset?"):
@@ -99,7 +102,7 @@ def process_youtube_tags():
     result_box.insert(tk.END, youtube_tags)  # Insert the processed tags
 
 # Function to clean duplicate tags and move one-word tags to the end
-def clean_duplicates():
+def clean_duplicates(silent=False):
     global last_processing_mode
 
     # Force a pass of the last recorded processing mode
@@ -111,7 +114,8 @@ def clean_duplicates():
     # Get the current content of the result box
     current_text = result_box.get("1.0", tk.END).strip()
     if not current_text:
-        messagebox.showinfo("Clean Duplicates", "No tags to clean!")
+        if not silent:  # Only show the message if not silent
+            messagebox.showinfo("Clean Duplicates", "No tags to clean!")
         return
 
     # Split the tags by commas, strip whitespace, and remove duplicates
@@ -129,7 +133,9 @@ def clean_duplicates():
     result_box.delete("1.0", tk.END)  # Clear the result box
     result_box.insert(tk.END, cleaned_tags)  # Insert the cleaned tags
 
-    messagebox.showinfo("Clean Duplicates", "Duplicates removed and one-word tags moved to the end!")
+    # Show a completion message only if not silent
+    if not silent:
+        messagebox.showinfo("Clean Duplicates", "Duplicates removed and one-word tags moved to the end!")
 
 # Create the main application window
 root = tk.Tk()
@@ -256,21 +262,21 @@ def create_wrapping_buttons(frame, preset_tags, max_width=750, internal_padding=
     return buttons
 
 # Add a label and buttons for the FIRST row | Mood & Instrumentation
-row1_label = tk.Label(container, text="1. Mood & Instrumentation", font=("TkDefaultFont", 10, "bold"))
+row1_label = tk.Label(container, text="1. Mood & Instrumentation (Most Common)", font=("TkDefaultFont", 10, "bold"))
 row1_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
 button_frame_row1 = tk.Frame(container, bg="#d0d0d0")
 button_frame_row1.pack()
 buttons_row1 = create_wrapping_buttons(button_frame_row1, preset_tags_row1)
 
 # Add a label and buttons for the SECOND row | Genre & Style Descriptors
-row2_label = tk.Label(container, text="2. Genre & Style Descriptors", font=("TkDefaultFont", 10, "bold"))
+row2_label = tk.Label(container, text="2. Genre & Style Descriptors (Core)", font=("TkDefaultFont", 10, "bold"))
 row2_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
 button_frame_row2 = tk.Frame(container, bg="#d0d0d0")
 button_frame_row2.pack()
 buttons_row2 = create_wrapping_buttons(button_frame_row2, preset_tags_row2)
 
 # Add a label and buttons for the THIRD row | Artist Type Beat Tags
-row3_label = tk.Label(container, text="3. Artist Type Beats", font=("TkDefaultFont", 10, "bold"))
+row3_label = tk.Label(container, text="3. Artist Type Beats (Least Common)", font=("TkDefaultFont", 10, "bold"))
 row3_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
 button_frame_row3 = tk.Frame(container, bg="#d0d0d0")
 button_frame_row3.pack()
@@ -285,6 +291,11 @@ scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 result_box = tk.Text(result_frame, height=10, width=50, wrap=tk.WORD, yscrollcommand=scrollbar.set)
 result_box.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+# Disable typing and pasting but allow selection
+result_box.bind("<Key>", lambda e: "break")  # Disable all key presses
+result_box.bind("<Button-3>", lambda e: "break")  # Disable right-click (context menu)
+result_box.bind("<Control-v>", lambda e: "break")  # Disable paste (Ctrl+V)
 
 scrollbar.config(command=result_box.yview)
 
@@ -316,10 +327,9 @@ def copy_description():
 utility_buttons_config = {
     "YouTube Format": process_youtube_tags,
     "SoundCloud Format": process_soundcloud_tags,
-    "SoundCloud Description": copy_description,
-    "Clean": clean_duplicates,
-    "Reset": reset_tags,
-    "Copy": copy_to_clipboard
+    "Copy Description": copy_description,
+    "Reset Tags": reset_tags,
+    "Copy Tags": copy_to_clipboard
 }
 utility_buttons = create_wrapping_buttons(container, utility_buttons_config)
 
