@@ -203,69 +203,82 @@ preset_tags_row3 = {
     "CaliberBeats": "#caliberbeats #caliber beats"
 }
 
-def create_wrapping_buttons(frame, preset_tags, max_width=750):
+def create_wrapping_buttons(frame, preset_tags, max_width=750, internal_padding=5):
     buttons = {}
     current_width = 0
-    row_frame = tk.Frame(frame)  # Create a new frame for the first row
-    row_frame.pack(fill=tk.X, pady=5, expand=True)  # Pack the row frame with horizontal stretching
+    row_frame = None
+
+    # Calculate the desired width of the parent container based on the first 7 buttons
+    desired_width = 0
+    for i, tag_name in enumerate(preset_tags.keys()):
+        if i < 7:  # Only calculate for the first 7 buttons
+            temp_button = tk.Button(frame, text=tag_name)
+            temp_button.update_idletasks()  # Ensure dimensions are calculated
+            desired_width += temp_button.winfo_reqwidth() + 10  # Add button width + padding
+        else:
+            break
+
+    # Create the first row frame with the calculated width
+    row_frame = tk.Frame(frame, bg="#d0d0d0")  # Outer frame with background color
+    row_frame.pack(pady=5)  # Add vertical spacing between rows
+
+    # Add an inner frame for consistent padding
+    inner_frame = tk.Frame(row_frame, bg="#d0d0d0", padx=internal_padding, pady=internal_padding)
+    inner_frame.pack()  # Do not use fill=tk.X to avoid stretching
 
     for tag_name, tag_value in preset_tags.items():
         # Check if the current width exceeds the max width
         if current_width + 100 > max_width:  # Approximate button width + padding
             # Start a new row
-            row_frame = tk.Frame(frame)
-            row_frame.pack(fill=tk.X, pady=5, expand=True)
+            row_frame = tk.Frame(frame, bg="#d0d0d0")  # Outer frame with background color
+            row_frame.pack(pady=5)
+
+            inner_frame = tk.Frame(row_frame, bg="#d0d0d0", padx=internal_padding, pady=internal_padding)
+            inner_frame.pack()
+
             current_width = 0  # Reset current width for the new row
 
         # Create a new button
-        button = tk.Button(row_frame, text=tag_name)
-        button.config(command=lambda tags=tag_value, btn=button: add_tags(tags, btn))  # Assign command after creation
-        button.pack(side=tk.LEFT, padx=5, pady=5)
+        button = tk.Button(inner_frame, text=tag_name)
+
+        # Check if the tag_value is a function (utility button) or a string (preset tag)
+        if callable(tag_value):  # If it's a function, assign it directly to the button's command
+            button.config(command=tag_value)
+        else:  # Otherwise, treat it as a preset tag
+            button.config(command=lambda tags=tag_value, btn=button: add_tags(tags, btn))
+
+        button.pack(side=tk.LEFT, padx=5, pady=5)  # Add padding between buttons
         buttons[tag_name] = button
 
         # Update the current width
-        row_frame.update_idletasks()  # Ensure button dimensions are calculated
         current_width += button.winfo_reqwidth() + 10  # Approximate button width + padding
 
     return buttons
 
-def create_single_row_buttons(frame, buttons_config):
-    buttons = {}
-    row_frame = tk.Frame(frame)  # Create a new frame for the row
-    row_frame.pack(pady=5, anchor="center")  # Center the row frame without stretching it horizontally
-
-    for button_text, button_command in buttons_config.items():
-        # Create a button and pack it into the row frame
-        button = tk.Button(row_frame, text=button_text, command=button_command)
-        button.pack(side=tk.LEFT, padx=5, pady=5)  # Pack buttons side by side
-        buttons[button_text] = button
-
-    return buttons
-
-# Add a label and buttons for the FIRST row of presets | Mood & Instrumentation
+# Add a label and buttons for the FIRST row | Mood & Instrumentation
 row1_label = tk.Label(container, text="1. Mood & Instrumentation", font=("TkDefaultFont", 10, "bold"))
-row1_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-button_frame_row1 = tk.Frame(container)
-button_frame_row1.pack(pady=5)
+row1_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+button_frame_row1 = tk.Frame(container, bg="#d0d0d0")
+button_frame_row1.pack()
 buttons_row1 = create_wrapping_buttons(button_frame_row1, preset_tags_row1)
 
-# Add a label and buttons for the SECOND row of presets | Genre & Style Descriptors
+# Add a label and buttons for the SECOND row | Genre & Style Descriptors
 row2_label = tk.Label(container, text="2. Genre & Style Descriptors", font=("TkDefaultFont", 10, "bold"))
-row2_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-button_frame_row2 = tk.Frame(container)
-button_frame_row2.pack(pady=5)
+row2_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+button_frame_row2 = tk.Frame(container, bg="#d0d0d0")
+button_frame_row2.pack()
 buttons_row2 = create_wrapping_buttons(button_frame_row2, preset_tags_row2)
 
-# Add a label and buttons for the THIRD row of presets | Artist Type Beat Tags
+# Add a label and buttons for the THIRD row | Artist Type Beat Tags
 row3_label = tk.Label(container, text="3. Artist Type Beats", font=("TkDefaultFont", 10, "bold"))
-row3_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=5)
-button_frame_row3 = tk.Frame(container)
-button_frame_row3.pack(pady=5)
+row3_label.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+button_frame_row3 = tk.Frame(container, bg="#d0d0d0")
+button_frame_row3.pack()
 buttons_row3 = create_wrapping_buttons(button_frame_row3, preset_tags_row3)
 
 # Set up the result message box inside the container with a scrollbar
 result_frame = tk.Frame(container)  # Create a frame to hold the Text widget and scrollbar
-result_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+result_frame.pack(padx=10, pady=25, fill=tk.BOTH, expand=True)
 
 scrollbar = tk.Scrollbar(result_frame)
 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -281,15 +294,34 @@ def copy_to_clipboard():
     root.clipboard_append(result_box.get("1.0", tk.END))
     messagebox.showinfo("Copied", "Tags copied to clipboard!")
 
-# Add a row for Copy and Reset buttons
+def copy_description():
+    try:
+        # Construct the file path
+        description_file_path = os.path.join(base_path, "soundcloud_description.txt")
+        
+        # Read the contents of the file
+        with open(description_file_path, "r", encoding="utf-8") as file:
+            description_content = file.read()
+        
+        # Copy the content to the clipboard
+        root.clipboard_clear()
+        root.clipboard_append(description_content)
+        messagebox.showinfo("Copied", "Description copied to clipboard!")
+    except FileNotFoundError:
+        messagebox.showerror("Error", "soundcloud_description.txt file not found!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+# Add a row for utility buttons
 utility_buttons_config = {
-    "SoundCloud": process_soundcloud_tags,
-    "YouTube": process_youtube_tags,
+    "YouTube Format": process_youtube_tags,
+    "SoundCloud Format": process_soundcloud_tags,
+    "SoundCloud Description": copy_description,
     "Clean": clean_duplicates,
     "Reset": reset_tags,
     "Copy": copy_to_clipboard
 }
-utility_buttons = create_single_row_buttons(container, utility_buttons_config)
+utility_buttons = create_wrapping_buttons(container, utility_buttons_config)
 
 # Start the GUI main loop
 root.mainloop()
