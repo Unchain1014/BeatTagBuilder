@@ -2,7 +2,7 @@
 
 Beat Tag Builder is a Python-based GUI application designed to help Hip Hop Producers generate and manage tags for SoundCloud and YouTube. The application provides preset tag groups, tag processing, and cleaning functionalities to streamline the tagging process.
 
-![screenshot.png](/images/screenshot.png)
+![screenshot.png](/images/screenshot.PNG)
 
 ## Features
 
