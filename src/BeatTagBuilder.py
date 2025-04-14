@@ -308,7 +308,7 @@ def copy_to_clipboard():
 def copy_description():
     try:
         # Construct the file path
-        description_file_path = os.path.join(base_path, "soundcloud_description.txt")
+        description_file_path = os.path.join(base_path, "description.txt")
         
         # Read the contents of the file
         with open(description_file_path, "r", encoding="utf-8") as file:
@@ -319,7 +319,7 @@ def copy_description():
         root.clipboard_append(description_content)
         messagebox.showinfo("Copied", "Description copied to clipboard!")
     except FileNotFoundError:
-        messagebox.showerror("Error", "soundcloud_description.txt file not found!")
+        messagebox.showerror("Error", "description.txt file not found!")
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
